@@ -1,0 +1,15 @@
+{% extends 'matchmaking/base.html' %}
+
+{% load static %}
+
+{% block title %}Queue{% endblock %}
+
+{% block content %}
+<h2>Queue</h2>
+<form method="post" action="{% url 'join_queue' %}">
+    {% csrf_token %}
+    <label for="username">Enter your username:</label>
+    <input type="text" id="username" name="username" required>
+    <button type="submit">Join Queue</button>
+</form>
+{% endblock %}

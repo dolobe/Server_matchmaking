@@ -1,0 +1,33 @@
+{% extends 'matchmaking/base.html' %}
+
+{% load static %}
+
+{% block title %}Match Details{% endblock %}
+
+{% block content %}
+<h2>Match Details</h2>
+<p>Match ID: {{ match.id }}</p>
+<p>Player 1: {{ match.player1.username }}</p>
+<p>Player 2: {{ match.player2.username }}</p>
+<p>Status: {% if match.is_finished %}Finished{% else %}In Progress{% endif %}</p>
+<p>Winner: {{ match.winner|default:"N/A" }}</p>
+
+<h3>Board State</h3>
+<table>
+    <tr>
+        <td>{{ match.board_state|slice:":1" }}</td>
+        <td>{{ match.board_state|slice:"1:2" }}</td>
+        <td>{{ match.board_state|slice:"2:3" }}</td>
+    </tr>
+    <tr>
+        <td>{{ match.board_state|slice:"3:4" }}</td>
+        <td>{{ match.board_state|slice:"4:5" }}</td>
+        <td>{{ match.board_state|slice:"5:6" }}</td>
+    </tr>
+    <tr>
+        <td>{{ match.board_state|slice:"6:7" }}</td>
+        <td>{{ match.board_state|slice:"7:8" }}</td>
+        <td>{{ match.board_state|slice:"8:9" }}</td>
+    </tr>
+</table>
+{% endblock %}

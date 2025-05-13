@@ -1,0 +1,9 @@
+Django>=3.2,<4.0
+channels
+mysqlclient
+djangorestframework
+djangorestframework-simplejwt
+python-socketio
+eventlet
+tkinter
+```
