@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <h2>Admin Dashboard</h2>
+    <a href="{% url 'logout' %}" class="btn btn-danger mt-3">Déconnexion</a>
+    <hr>
+    <h4>File d'attente</h4>
+    <table class="table table-bordered">
+        <tr>
+            <th>User</th><th>IP</th><th>Port</th><th>Date entrée</th>
+        </tr>
+        {% for q in queues %}
+        <tr>
+            <td>{{ q.user.username }}</td>
+            <td>{{ q.ip }}</td>
+            <td>{{ q.port }}</td>
+            <td>{{ q.joined_at }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">Aucun en attente</td></tr>
+        {% endfor %}
+    </table>
+    <h4>Matchs</h4>
+    <table class="table table-bordered">
+        <tr>
+            <th>Joueur 1</th><th>Joueur 2</th><th>État</th><th>Gagnant</th>
+        </tr>
+        {% for m in matchs %}
+        <tr>
+            <td>{{ m.player1.username }}</td>
+            <td>{{ m.player2.username }}</td>
+            <td>{% if m.is_finished %}Fini{% else %}En cours{% endif %}</td>
+            <td>{{ m.winner }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">Aucun match</td></tr>
+        {% endfor %}
+    </table>
+    <h4>Tours</h4>
+    <table class="table table-bordered">
+        <tr>
+            <th>Match</th><th>Joueur</th><th>Coup</th><th>Date</th>
+        </tr>
+        {% for t in turns %}
+        <tr>
+            <td>{{ t.match.id }}</td>
+            <td>{{ t.player.username }}</td>
+            <td>{{ t.move }}</td>
+            <td>{{ t.played_at }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">Aucun tour</td></tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>

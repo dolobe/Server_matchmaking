@@ -1,57 +1,59 @@
-# Matchmaking Project
 
-## Overview
-This project is a matchmaking server for a turn-based Tic Tac Toe game. It consists of three main components: a server for matchmaking, a client application for players, and a MySQL database for data storage.
+# Matchmaking Project - Morpion (Tic Tac Toe) en Réseau
 
-## Components
+## Objectif
 
-### Server
-- **Framework**: Django
-- **Functionality**: 
-  - Handles matchmaking and game logic.
-  - Manages player queues and matches.
-  - Communicates with clients via WebSockets.
-- **Directory**: `server/matchmaking/`
-  - Contains models, views, serializers, and WebSocket handling.
+Ce projet propose une plateforme de **matchmaking** pour jouer au jeu du morpion (Tic Tac Toe) en ligne, avec :
+- Un serveur Django (API REST + WebSocket via Channels)
+- Un client logiciel multiplateforme en Python/Tkinter
+- Une base de données MySQL pour la gestion des utilisateurs, parties, statistiques
 
-### Client
-- **Framework**: Python with Tkinter for GUI
-- **Functionality**: 
-  - Allows players to enter a queue, play the game, and receive updates.
-  - Supports both GUI and command-line interfaces.
-- **Directory**: `client/src/`
-  - Contains the main application logic, GUI components, and socket communication.
+Le but est de permettre à plusieurs joueurs de s’inscrire, se connecter, rejoindre une file d’attente, être appariés automatiquement, jouer en temps réel, et consulter leurs statistiques.
 
-### Database
-- **Database Management**: MySQL
-- **Functionality**: 
-  - Stores user data, game statistics, and match history.
-- **Directory**: `database/`
-  - Contains SQL scripts for database setup and migrations.
+---
+
+## Fonctionnalités
+
+- **Inscription et connexion** sécurisées (API REST)
+- **Matchmaking automatique** : file d’attente, appariement 1v1
+- **Jeu du morpion** en temps réel (WebSocket)
+- **Gestion stricte des tours** (un coup par joueur à chaque tour)
+- **Affichage des scores et statistiques** (parties jouées, victoires, défaites, égalités)
+- **Dashboard admin** (visualisation des files, matchs, logs)
+- **Logs** détaillés côté client et serveur
+
+---
+
+## Architecture
+####   matchmaking-project/
+####    │
+####    ├── matchmaking_server/ # Code Django (API, WebSocket, modèles, admin)
+####    │   ├── manage.py
+####    │   ├── web_django/
+###    │   └── matchmaking/
+###    │
+####    └── matchmaking_client_tk/
+####        ├── main.py
+####        ├── auth.py
+####        ├── morpion.py
+####        └── stats.py
+
+
+---
+
+## Prérequis
+
+- **Python 3.10+**
+- **MariaDB, Port : 3307**
+- **pip** (gestionnaire de paquets Python)
+
+---
 
 ## Installation
-1. Clone the repository.
-2. Navigate to the `server` directory and install the required packages:
-   ```
-   pip install -r requirements.txt
-   ```
-3. Set up the MySQL database using the provided `db.sql` script in the `database` directory.
-4. Run the Django server:
-   ```
-   python manage.py runserver
-   ```
-5. For the client, navigate to the `client/src` directory and run:
-   ```
-   python main.py
-   ```
 
-## Usage
-- Players can connect to the server and enter the matchmaking queue.
-- Once matched, they can play Tic Tac Toe against each other.
-- The game supports real-time updates and displays the current game state.
+###  Cloner le dépôt :
 
-## Contributing
-Contributions are welcome! Please submit a pull request or open an issue for any enhancements or bug fixes.
 
-## License
-This project is licensed under the MIT License. See the LICENSE file for more details.
+## Lancement du serveur
+daphne -p 8080 web_django.asgi:application
+
