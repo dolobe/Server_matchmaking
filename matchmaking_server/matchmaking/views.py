@@ -85,14 +85,28 @@ def logout_view(request):
 def dashboard_view(request):
     logger.info("Accès au dashboard utilisateur")
     user = None
+    is_admin = False
+    stats = {
+        "games_played": 0,
+        "games_won": 0,
+        "games_lost": 0,
+        "games_draw": 0,
+    }
     if 'user_id' in request.session:
         try:
             user = User.objects.get(id=request.session['user_id'])
-            logger.info(f"Dashboard affiché pour {user.username}")
+            is_admin = UserRole.objects.filter(user=user, role__name="admin").exists()
+            logger.info(f"Dashboard affiché pour {user.username} (admin={is_admin})")
+            # Récupérer les statistiques de l'utilisateur
+            stats['games_played'] = Match.objects.filter(player1=user).count() + Match.objects.filter(player2=user).count()
+            stats['games_won'] = Match.objects.filter(winner=user.username).count()
+            games_draw = Match.objects.filter(winner="draw").filter(player1=user) | Match.objects.filter(winner="draw").filter(player2=user)
+            stats['games_draw'] = games_draw.count()
+            stats['games_lost'] = stats['games_played'] - stats['games_won'] - stats['games_draw']
         except User.DoesNotExist:
             logger.warning("Utilisateur non trouvé en session")
             user = None
-    return render(request, 'matchmaking/dashboard.html', {'user': user})
+    return render(request, "matchmaking/dashboard.html", {"user": user, "is_admin": is_admin, "stats": stats})
 
 def admin_dashboard_view(request):
     logger.info("Accès au dashboard admin")

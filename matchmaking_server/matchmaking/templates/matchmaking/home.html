@@ -13,20 +13,33 @@
             from { opacity: 0; transform: translateY(-20px);}
             to { opacity: 1; transform: translateY(0);}
         }
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #0d6efd;
+        }
+        .footer {
+            margin-top: 60px;
+            padding: 20px 0;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            text-align: center;
+            color: #888;
+        }
     </style>
 </head>
 <body class="bg-light">
 <div class="container mt-5 fade-in">
     <div class="text-center mb-4">
-        <h1 class="display-4">Bienvenue sur Matchmaking !</h1>
-        <p class="lead">Affrontez d'autres joueurs en ligne au morpion.</p>
+        <h1 class="display-4">Bienvenue sur <span class="text-primary">Matchmaking</span> !</h1>
+        <p class="lead">Affrontez d'autres joueurs en ligne au <strong>morpion</strong>.<br>
+        Rejoignez la communauté, améliorez votre score et devenez le meilleur stratège !</p>
     </div>
     <div class="row justify-content-center mb-4">
         <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-body text-center">
                     {% if user %}
-                        <h5 class="mb-3">Bonjour, {{ user.username }} !</h5>
+                        <h5 class="mb-3">Bonjour, <span class="text-success">{{ user.username }}</span> !</h5>
                         <a href="{% url 'dashboard' %}" class="btn btn-primary mb-2">Mon Dashboard</a>
                         <a href="{% url 'logout' %}" class="btn btn-outline-danger mb-2">Déconnexion</a>
                         {% if is_admin %}
@@ -42,20 +55,56 @@
     </div>
     <div class="row justify-content-center mb-4">
         <div class="col-md-4">
-            <div class="alert alert-info text-center">
-                <strong>Joueurs en file d'attente :</strong> {{ queue_count }}
+            <div class="alert alert-info text-center shadow-sm">
+                <strong>Joueurs en file d'attente :</strong> <span class="fs-4">{{ queue_count }}</span>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="alert alert-success text-center">
-                <strong>Matchs en cours :</strong> {{ match_count }}
+            <div class="alert alert-success text-center shadow-sm">
+                <strong>Matchs en cours :</strong> <span class="fs-4">{{ match_count }}</span>
             </div>
         </div>
     </div>
-    <div class="text-center">
-        <img src="{% static 'img/tic-tac-toe.png' %}" alt="Morpion" width="120" class="mb-3">
-        <p class="text-muted">Développé avec Django, Channels, WebSocket, Bootstrap.</p>
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-10">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="mb-3 text-center">Fonctionnalités</h4>
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3">
+                            <div class="feature-icon mb-2">🎮</div>
+                            <strong>Matchmaking instantané</strong>
+                            <p class="text-muted small">Rejoignez la file d'attente et affrontez un adversaire en temps réel.</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="feature-icon mb-2">💬</div>
+                            <strong>Jeu en direct</strong>
+                            <p class="text-muted small">Plateau interactif, gestion stricte des tours, notifications en direct.</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="feature-icon mb-2">📊</div>
+                            <strong>Statistiques détaillées</strong>
+                            <p class="text-muted small">Suivez vos victoires, défaites, égalités et votre progression.</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="feature-icon mb-2">🛡️</div>
+                            <strong>Espace admin sécurisé</strong>
+                            <p class="text-muted small">Gestion des utilisateurs, parties et supervision du système.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <div class="text-center mb-4">
+        <img src="{% static 'img/tic_tac_toe.jpg' %}" alt="Morpion" width="120" class="mb-3">
+        <p class="text-muted">Développé avec <strong>Django</strong>, <strong>Channels</strong>, <strong>WebSocket</strong>, <strong>Bootstrap</strong>.<br>
+        <span class="text-secondary small">Projet B2-INFO 2025 - Herison et Awa</span></p>
+    </div>
+</div>
+<div class="footer">
+    &copy; 2025 Matchmaking Project &mdash; Jeu du Morpion en réseau. Tous droits réservés.
 </div>
 </body>
 </html>
