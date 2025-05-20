@@ -42,9 +42,9 @@
                         <h5 class="mb-3">Bonjour, <span class="text-success">{{ user.username }}</span> !</h5>
                         <a href="{% url 'dashboard' %}" class="btn btn-primary mb-2">Mon Dashboard</a>
                         <a href="{% url 'logout' %}" class="btn btn-outline-danger mb-2">Déconnexion</a>
-                        {% if is_admin %}
+                        {% comment %} {% if is_admin %}
                             <a href="{% url 'admin_dashboard' %}" class="btn btn-warning mb-2">Admin</a>
-                        {% endif %}
+                        {% endif %} {% endcomment %}
                     {% else %}
                         <a href="{% url 'login' %}" class="btn btn-primary mb-2">Connexion</a>
                         <a href="{% url 'register' %}" class="btn btn-outline-success mb-2">Inscription</a>

@@ -13,4 +13,5 @@ urlpatterns = [
     path('api/register/', views.api_register, name='api_register'),
     path('api/login/', views.api_login, name='api_login'),
     path('api/stats/<str:username>/', views.api_stats, name='api_stats'),
+    path('api/ia_match/', views.api_ia_match, name='api_ia_match'),
 ]

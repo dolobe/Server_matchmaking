@@ -47,12 +47,39 @@
                     <li class="list-group-item"><strong>Nom d'utilisateur :</strong> {{ user.username }}</li>
                     <li class="list-group-item"><strong>Email :</strong> {{ user.email }}</li>
                 </ul>
-                <h5 class="mb-2">Statistiques :</h5>
+                <h5 class="mb-2">Statistiques en ligne :</h5>
                 <ul class="list-group mb-3">
                     <li class="list-group-item">Parties jouées : <strong>{{ stats.games_played }}</strong></li>
                     <li class="list-group-item">Victoires : <strong>{{ stats.games_won }}</strong></li>
                     <li class="list-group-item">Défaites : <strong>{{ stats.games_lost }}</strong></li>
                     <li class="list-group-item">Égalités : <strong>{{ stats.games_draw }}</strong></li>
+                </ul>
+                <h5 class="mb-2">Statistiques contre l'ordinateur :</h5>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item">Victoires contre l'IA : <strong>{{ stats.ia_wins|default:0 }}</strong></li>
+                    <li class="list-group-item">Défaites contre l'IA : <strong>{{ stats.ia_loses|default:0 }}</strong></li>
+                    <li class="list-group-item">Égalités contre l'IA : <strong>{{ stats.ia_draws|default:0 }}</strong></li>
+                </ul>
+                <h6 class="mb-2">Détail par difficulté :</h6>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item">
+                        <strong>Facile</strong> — 
+                        V: <strong>{{ stats.ia_wins_facile|default:0 }}</strong> | 
+                        D: <strong>{{ stats.ia_loses_facile|default:0 }}</strong> | 
+                        É: <strong>{{ stats.ia_draws_facile|default:0 }}</strong>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Moyen</strong> — 
+                        V: <strong>{{ stats.ia_wins_moyen|default:0 }}</strong> | 
+                        D: <strong>{{ stats.ia_loses_moyen|default:0 }}</strong> | 
+                        É: <strong>{{ stats.ia_draws_moyen|default:0 }}</strong>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Difficile</strong> — 
+                        V: <strong>{{ stats.ia_wins_difficile|default:0 }}</strong> | 
+                        D: <strong>{{ stats.ia_loses_difficile|default:0 }}</strong> | 
+                        É: <strong>{{ stats.ia_draws_difficile|default:0 }}</strong>
+                    </li>
                 </ul>
             {% endif %}
         {% endif %}

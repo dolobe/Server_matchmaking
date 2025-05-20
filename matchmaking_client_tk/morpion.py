@@ -201,19 +201,30 @@ class MorpionFrame(tk.Frame):
         logging.debug("Construction de l'interface du plateau de jeu.")
         for widget in self.winfo_children():
             widget.destroy()
-        tk.Button(self, text="Retour menu", command=self.on_back).pack(anchor="nw", padx=10, pady=5)
-        self.status = tk.Label(self, text="Connexion au serveur...", font=("Arial", 12))
+        # Score card
+        score_card = tk.Frame(self, bg="#0d6efd", bd=0, relief="ridge")
+        score_card.pack(pady=(18, 8), padx=20, fill="x")
+        self.score_label = tk.Label(score_card, text=self.score_text(), font=("Arial", 13, "bold"), bg="#0d6efd", fg="white")
+        self.score_label.pack(pady=8)
+        # Retour bouton
+        tk.Button(self, text="Retour menu", command=self.on_back, bg="#adb5bd", fg="#222", font=("Arial", 10, "bold"),
+                  relief="flat", cursor="hand2", activebackground="#6c757d").pack(anchor="nw", padx=18, pady=(0, 8))
+        # Statut
+        self.status = tk.Label(self, text="Connexion au serveur...", font=("Arial", 12), bg="#f5f6fa", fg="#0d6efd")
         self.status.pack(pady=10)
-        self.score_label = tk.Label(self, text=self.score_text(), font=("Arial", 11))
-        self.score_label.pack(pady=5)
-        self.board_frame = tk.Frame(self)
-        self.board_frame.pack(pady=10)
+        # Plateau
+        board_card = tk.Frame(self, bg="white", bd=2, relief="groove")
+        board_card.pack(pady=10)
+        self.board_frame = tk.Frame(board_card, bg="white")
+        self.board_frame.pack(padx=10, pady=10)
         self.buttons = [[None for _ in range(3)] for _ in range(3)]
         for i in range(3):
             for j in range(3):
-                btn = tk.Button(self.board_frame, text="", width=5, height=2, font=("Arial", 20),
+                btn = tk.Button(self.board_frame, text="", width=5, height=2, font=("Arial", 22, "bold"),
+                                bg="#e9ecef", fg="#222", relief="ridge", bd=2,
+                                activebackground="#b6d4fe", cursor="hand2",
                                 command=lambda x=i, y=j: self.play_move(x, y), state="disabled")
-                btn.grid(row=i, column=j, padx=3, pady=3)
+                btn.grid(row=i, column=j, padx=5, pady=5)
                 self.buttons[i][j] = btn
         logging.info("Interface du plateau de jeu construite.")
 

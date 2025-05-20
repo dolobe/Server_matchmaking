@@ -2,7 +2,7 @@ import logging
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import RegisterForm, LoginForm
-from .models import User, Role, UserRole, Queue, Match, Turn
+from .models import User, Role, UserRole, Queue, Match, Turn, Statistic
 from django.contrib.auth.hashers import make_password, check_password
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -59,8 +59,8 @@ def login_view(request):
                     is_admin = UserRole.objects.filter(user=user, role__name="admin").exists()
                     logger.info(f"Connexion réussie pour {username} (admin={is_admin})")
                     if is_admin:
-                        return redirect('admin_dashboard')
-                    return redirect('dashboard')
+                        return redirect('home')
+                    return redirect('home')
                 else:
                     logger.warning(f"Mot de passe incorrect pour {username}")
                     messages.error(request, "Mot de passe incorrect.")
@@ -91,6 +91,18 @@ def dashboard_view(request):
         "games_won": 0,
         "games_lost": 0,
         "games_draw": 0,
+        "ia_wins": 0,
+        "ia_loses": 0,
+        "ia_draws": 0,
+        "ia_wins_facile": 0,
+        "ia_loses_facile": 0,
+        "ia_draws_facile": 0,
+        "ia_wins_moyen": 0,
+        "ia_loses_moyen": 0,
+        "ia_draws_moyen": 0,
+        "ia_wins_difficile": 0,
+        "ia_loses_difficile": 0,
+        "ia_draws_difficile": 0,
     }
     if 'user_id' in request.session:
         try:
@@ -103,6 +115,23 @@ def dashboard_view(request):
             games_draw = Match.objects.filter(winner="draw").filter(player1=user) | Match.objects.filter(winner="draw").filter(player2=user)
             stats['games_draw'] = games_draw.count()
             stats['games_lost'] = stats['games_played'] - stats['games_won'] - stats['games_draw']
+            # Statistiques IA (toutes difficultés et par difficulté)
+            try:
+                stat = Statistic.objects.get(user=user)
+                stats['ia_wins'] = stat.ia_wins
+                stats['ia_loses'] = stat.ia_loses
+                stats['ia_draws'] = stat.ia_draws
+                stats['ia_wins_facile'] = stat.ia_wins_facile
+                stats['ia_loses_facile'] = stat.ia_loses_facile
+                stats['ia_draws_facile'] = stat.ia_draws_facile
+                stats['ia_wins_moyen'] = stat.ia_wins_moyen
+                stats['ia_loses_moyen'] = stat.ia_loses_moyen
+                stats['ia_draws_moyen'] = stat.ia_draws_moyen
+                stats['ia_wins_difficile'] = stat.ia_wins_difficile
+                stats['ia_loses_difficile'] = stat.ia_loses_difficile
+                stats['ia_draws_difficile'] = stat.ia_draws_difficile
+            except Statistic.DoesNotExist:
+                logger.info(f"Aucune statistique IA trouvée pour {user.username}, valeurs par défaut utilisées.")
         except User.DoesNotExist:
             logger.warning("Utilisateur non trouvé en session")
             user = None
@@ -207,6 +236,7 @@ def api_stats(request, username):
             games_draw = Match.objects.filter(winner="draw").filter(player1=user) | Match.objects.filter(winner="draw").filter(player2=user)
             games_draw = games_draw.count()
             games_lost = games_played - games_won - games_draw
+            stat, _ = Statistic.objects.get_or_create(user=user)
             return JsonResponse({
                 "username": user.username,
                 "email": user.email,
@@ -214,7 +244,64 @@ def api_stats(request, username):
                 "games_won": games_won,
                 "games_lost": games_lost,
                 "games_draw": games_draw,
+                "ia_wins": stat.ia_wins,
+                "ia_loses": stat.ia_loses,
+                "ia_draws": stat.ia_draws,
+                "ia_wins_facile": stat.ia_wins_facile,
+                "ia_loses_facile": stat.ia_loses_facile,
+                "ia_draws_facile": stat.ia_draws_facile,
+                "ia_wins_moyen": stat.ia_wins_moyen,
+                "ia_loses_moyen": stat.ia_loses_moyen,
+                "ia_draws_moyen": stat.ia_draws_moyen,
+                "ia_wins_difficile": stat.ia_wins_difficile,
+                "ia_loses_difficile": stat.ia_loses_difficile,
+                "ia_draws_difficile": stat.ia_draws_difficile,
             }, status=200)
         except User.DoesNotExist:
             return JsonResponse({"detail": "Utilisateur inconnu."}, status=404)
+    return JsonResponse({"detail": "Méthode non autorisée."}, status=405)
+
+@csrf_exempt
+def api_ia_match(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            username = data.get("username")
+            result = data.get("result")  # "win", "lose", "draw"
+            difficulty = data.get("difficulty", "facile")  # "facile", "moyen", "difficile"
+            user = User.objects.get(username=username)
+            stat, _ = Statistic.objects.get_or_create(user=user)
+            # Global stats
+            if result == "win":
+                stat.ia_wins += 1
+            elif result == "lose":
+                stat.ia_loses += 1
+            elif result == "draw":
+                stat.ia_draws += 1
+            # Stats par difficulté
+            if difficulty == "facile":
+                if result == "win":
+                    stat.ia_wins_facile += 1
+                elif result == "lose":
+                    stat.ia_loses_facile += 1
+                elif result == "draw":
+                    stat.ia_draws_facile += 1
+            elif difficulty == "moyen":
+                if result == "win":
+                    stat.ia_wins_moyen += 1
+                elif result == "lose":
+                    stat.ia_loses_moyen += 1
+                elif result == "draw":
+                    stat.ia_draws_moyen += 1
+            elif difficulty == "difficile":
+                if result == "win":
+                    stat.ia_wins_difficile += 1
+                elif result == "lose":
+                    stat.ia_loses_difficile += 1
+                elif result == "draw":
+                    stat.ia_draws_difficile += 1
+            stat.save()
+            return JsonResponse({"detail": "Score IA enregistré."}, status=201)
+        except Exception as e:
+            return JsonResponse({"detail": str(e)}, status=400)
     return JsonResponse({"detail": "Méthode non autorisée."}, status=405)
