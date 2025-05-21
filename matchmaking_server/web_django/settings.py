@@ -85,7 +85,7 @@ DATABASES = {
         'USER': 'root',                       # Nom d'utilisateur MySQL
         'PASSWORD': 'Azerty#22',                       # Mot de passe MySQL (remplissez si nécessaire)
         'HOST': 'localhost',                  # Hôte (par défaut : localhost)
-        'PORT': '3307',
+        'PORT': '3306',
         "OPTIONS": {"init_command": "SET sql_mode='STRICT_TRANS_TABLES'"},
     }
 }
